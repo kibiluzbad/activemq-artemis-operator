@@ -1,8 +1,9 @@
 package artemis
 
 import (
-	"github.com/roddiekieley/activemq-artemis-management/jolokia"
 	"strings"
+
+	"github.com/kibiluzbad/activemq-artemis-management/jolokia"
 )
 
 type IArtemis interface {

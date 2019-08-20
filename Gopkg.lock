@@ -1115,7 +1115,7 @@
     "github.com/operator-framework/operator-sdk/pkg/log/zap",
     "github.com/operator-framework/operator-sdk/pkg/metrics",
     "github.com/operator-framework/operator-sdk/version",
-    "github.com/roddiekieley/activemq-artemis-management",
+    "github.com/kibiluzbad/activemq-artemis-management",
     "github.com/spf13/pflag",
     "github.com/stretchr/testify/assert",
     "k8s.io/api/apps/v1",

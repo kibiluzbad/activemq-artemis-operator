@@ -3,10 +3,12 @@ package activemqartemisaddress
 import (
 	"context"
 	"fmt"
+	"strconv"
+
+	mgmt "github.com/kibiluzbad/activemq-artemis-management"
 	brokerv1alpha1 "github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	aa "github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemis"
 	ss "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/statefulsets"
-	mgmt "github.com/roddiekieley/activemq-artemis-management"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -18,7 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
-	"strconv"
 )
 
 var log = logf.Log.WithName("controller_activemqartemisaddress")
@@ -96,7 +97,13 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 		// Delete action
 		addressInstance, lookupSucceeded := namespacedNameToAddressName[request.NamespacedName]
 		if lookupSucceeded {
-			err = deleteQueue(&addressInstance, request, r.client)
+
+			if addressInstance.Spec.QueueName != "" {
+				err = deleteQueue(&addressInstance, request, r.client)
+			} else {
+				err = deleteAddress(&addressInstance, request, r.client)
+			}
+
 			delete(namespacedNameToAddressName, request.NamespacedName)
 		}
 		if errors.IsNotFound(err) {
@@ -109,7 +116,12 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
 	} else {
-		err = createQueue(instance, request, r.client)
+		err = nil
+		if addressInstance.Spec.QueueName != "" {
+			err = createQueue(instance, request, r.client)
+		} else {
+			err = createAddres(instance, request, r.client)
+		}
 		if nil == err {
 			namespacedNameToAddressName[request.NamespacedName] = *instance //.Spec.QueueName
 		}
@@ -132,6 +144,32 @@ func createQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconc
 				continue
 			}
 			_, err := a.CreateQueue(instance.Spec.AddressName, instance.Spec.QueueName, instance.Spec.RoutingType)
+			if nil != err {
+				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.QueueName)
+				break
+			} else {
+				reqLogger.Info("Created ActiveMQArtemisAddress for " + instance.Spec.QueueName)
+			}
+		}
+	}
+
+	return err
+}
+
+func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+
+	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger.Info("Creating ActiveMQArtemisAddress")
+
+	var err error = nil
+	artemisArray := getPodBrokers(instance, request, client)
+	if nil != artemisArray {
+		for _, a := range artemisArray {
+			if nil == a {
+				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
+				continue
+			}
+			_, err := a.createAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
 			if nil != err {
 				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.QueueName)
 				break
@@ -169,6 +207,28 @@ func deleteQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconc
 						reqLogger.Info("Bindings found, not removing " + instance.Spec.AddressName)
 					}
 				}
+			}
+		}
+	}
+
+	return err
+}
+
+func deleteAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+
+	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger.Info("Deleting ActiveMQArtemisAddress")
+
+	var err error = nil
+	artemisArray := getPodBrokers(instance, request, client)
+	if nil != artemisArray {
+		for _, a := range artemisArray {
+			_, err := a.DeleteAddress(instance.Spec.AddressName, true)
+			if nil != err {
+				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
+				break
+			} else {
+				reqLogger.Info("Deleted ActiveMQArtemisAddress for " + instance.Spec.AddressName)
 			}
 		}
 	}

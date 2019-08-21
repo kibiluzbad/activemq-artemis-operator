@@ -1,0 +1,52 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: activemqartemisdiverts.broker.amq.io
+spec:
+  group: broker.amq.io
+  names:
+    kind: ActiveMQArtemisDivert
+    listKind: ActiveMQArtemisDivertList
+    plural: activemqartemisdiverts
+    singular: activemqartemisdivert
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1alpha2
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            statefulsetName:
+              type: string
+            name:
+              type: string
+            routingName:
+              type: string
+            forwardingAddress:
+              type: string
+            exclusive:
+              type: boolean
+          required:
+            - name
+            - routingName
+            - forwardingAddress
+            - exclusive
+          type: object
+        status:
+          type: object
+  versions:
+  - name: v1alpha2
+    served: true
+    storage: true
+  - name: v1alpha1
+    served: true
+    storage: false

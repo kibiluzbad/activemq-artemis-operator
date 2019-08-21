@@ -339,14 +339,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8f19750adc7c2a79e1b13d4139fc5af08dae2f846ce9ece5b8faaa116181a334"
+  digest = "1:118553e127ab31f860731fd15996f85a11162da4fd7479bfb3ec00b84bd8dae5"
   name = "github.com/kibiluzbad/activemq-artemis-management"
   packages = [
     ".",
     "jolokia",
   ]
   pruneopts = "NT"
-  revision = "1813a95ac3b43c44427a9c29620302baf4b4e030"
+  revision = "8b5cd26040882041ddf69cd56dd6b8d2c61d95f0"
 
 [[projects]]
   branch = "master"

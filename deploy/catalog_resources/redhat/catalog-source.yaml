@@ -350,6 +350,24 @@ items:
                     - commonConfig
                     type: object
                   status:
+                    properties:
+                      podStatus:
+                        properties:
+                          ready:
+                            items:
+                              type: string
+                            type: array
+                          starting:
+                            items:
+                              type: string
+                            type: array
+                          stopped:
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                    required:
+                    - podStatus
                     type: object
             version: v1alpha1
             versions:
@@ -371,6 +389,7 @@ items:
             scope: Namespaced
             subresources:
               status: {}
+            version: v1alpha2
             validation:
               openAPIV3Schema:
                 properties:
@@ -392,17 +411,17 @@ items:
                         type: string
                     required:
                       - addressName
-                      - queueName
                       - routingType
-                      - statefulsetName
                     type: object
                   status:
                     type: object
-            version: v1alpha1
             versions:
-            - name: v1alpha1
+            - name: v1alpha2
               served: true
               storage: true
+            - name: v1alpha1
+              served: true
+              storage: false
         - apiVersion: apiextensions.k8s.io/v1beta1
           kind: CustomResourceDefinition
           metadata:

@@ -341,6 +341,14 @@
   version = "v1.1.6"
 
 [[projects]]
+  digest = "1:5045dc68499755dafc3d6db9f7616d93bd45c7bc39a0f095a3de4577aa6ec11a"
+  name = "github.com/kibiluzbad/activemq-artemis-management"
+  packages = ["."]
+  pruneopts = "NT"
+  revision = "aeac24d207ec3b4cabe9471998580ea546644d9e"
+  version = "0.1.1"
+
+[[projects]]
   branch = "master"
   digest = "1:782fb677791a7fe7b5b8e637bcf695efb13950ce09e3e8e3b1cf21c57649be7c"
   name = "github.com/mailru/easyjson"
@@ -499,6 +507,32 @@
   ]
   pruneopts = "NT"
   revision = "9935e8e0588d26307d1d4a07bed7bd47271b6bbd"
+
+[[projects]]
+  digest = "1:d6e855aa9b2db97ee8f8c2ff40a9e21d23a339c2590b3b73cf64a87e2c1ca2f4"
+  name = "github.com/rh-messaging/activemq-artemis-operator"
+  packages = [
+    "pkg/apis",
+    "pkg/apis/broker/v1alpha1",
+    "pkg/controller",
+    "pkg/controller/activemqartemis",
+    "pkg/controller/activemqartemisaddress",
+    "pkg/controller/activemqartemisscaledown",
+    "pkg/draincontroller",
+    "pkg/resources/ingresses",
+    "pkg/resources/persistentvolumeclaims",
+    "pkg/resources/routes",
+    "pkg/resources/services",
+    "pkg/resources/statefulsets",
+    "pkg/signals",
+    "pkg/utils/env",
+    "pkg/utils/fsm",
+    "pkg/utils/selectors",
+    "version",
+  ]
+  pruneopts = "NT"
+  revision = "a253393599f1bfab64d1fa7624a21335d65d6cca"
+  version = "0.6.3"
 
 [[projects]]
   digest = "1:5045dc68499755dafc3d6db9f7616d93bd45c7bc39a0f095a3de4577aa6ec11a"
@@ -1109,13 +1143,30 @@
     "github.com/RHsyseng/operator-utils/pkg/validation",
     "github.com/ghodss/yaml",
     "github.com/go-openapi/spec",
+    "github.com/kibiluzbad/activemq-artemis-management",
     "github.com/openshift/api/route/v1",
     "github.com/operator-framework/operator-sdk/pkg/k8sutil",
     "github.com/operator-framework/operator-sdk/pkg/leader",
     "github.com/operator-framework/operator-sdk/pkg/log/zap",
     "github.com/operator-framework/operator-sdk/pkg/metrics",
     "github.com/operator-framework/operator-sdk/version",
-    "github.com/kibiluzbad/activemq-artemis-management",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/apis",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/controller",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemis",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemisaddress",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemisscaledown",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/draincontroller",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/ingresses",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/persistentvolumeclaims",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/routes",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/services",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/statefulsets",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/signals",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/utils/env",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/utils/fsm",
+    "github.com/rh-messaging/activemq-artemis-operator/pkg/utils/selectors",
+    "github.com/rh-messaging/activemq-artemis-operator/version",
     "github.com/spf13/pflag",
     "github.com/stretchr/testify/assert",
     "k8s.io/api/apps/v1",

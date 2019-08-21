@@ -1,12 +1,27 @@
+---
 apiVersion: broker.amq.io/v1alpha2
 kind: ActiveMQArtemisAddress
 metadata:
-  name: example-activemqartemisaddress
+  name: jms.queue.transacao
   labels:
     ActiveMQArtemis: example-activemqartemis
     application: example-activemqartemis-app
 spec:
   # Add fields here
-  addressName: myAddress0
-  queueName: myQueue0
+  statefulsetName: example-activemqartemis-ss
+  addressName: jms.queue.transacao
+  queueName: jms.queue.transacao
   routingType: anycast
+---
+apiVersion: broker.amq.io/v1alpha2
+kind: ActiveMQArtemisAddress
+metadata:
+  name: jms.topic.transacao.999999
+  labels:
+    ActiveMQArtemis: example-activemqartemis
+    application: example-activemqartemis-app
+spec:
+  # Add fields here
+  statefulsetName: example-activemqartemis-ss
+  addressName: jms.topic.transacao.999999
+  routingType: MULTICAST

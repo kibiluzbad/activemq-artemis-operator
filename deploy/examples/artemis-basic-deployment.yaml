@@ -7,8 +7,8 @@ metadata:
     application: example-activemqartemis-app
 spec:
   # Add fields here
-  size: 4
-  image: registry.redhat.io/amq7/amq-broker:7.4
+  size: 1
+  image: kibiluzbad/artemis-broker:7.4
   commonConfig:
     userName: admin
     password: admin

@@ -3,7 +3,7 @@ package activemqartemisscaledown
 import (
 	"context"
 
-	brokerv1alpha1 "github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	brokerv1alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -18,8 +18,8 @@ import (
 
 	"time"
 
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/draincontroller"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/signals"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/draincontroller"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/signals"
 	"io/ioutil"
 	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"

@@ -66,6 +66,10 @@ required = [
   name = "github.com/RHsyseng/operator-utils"
   revision = "232650febd728455482b3c780c79a9ac0be62b50"
 
+[[constraint]]
+  name = "github.com/kibiluzbad/activemq-artemis-management"
+  revision = "0da048bb52c4b23488f252ff0d315a774fb3b73c"
+
 [prune]
   go-tests = true
   non-go = true

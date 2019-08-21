@@ -12,18 +12,18 @@ resource.
 
 ## Getting the code
 
-To launch the operator you will need to clone the [activemq-artemis-operator](https://github.com/rh-messaging/activemq-artemis-operator)
+To launch the operator you will need to clone the [activemq-artemis-operator](https://github.com/kibiluzbad/activemq-artemis-operator)
 and checkout the 0.6.3 tag as per
 
 ```$xslt
-git clone https://github.com/rh-messaging/activemq-artemis-operator
+git clone https://github.com/kibiluzbad/activemq-artemis-operator
 git checkout 0.6.3
 ```
 
 ## Deploying the operator
 
-In the activemq-artemis-operator/deploy directory you should see [operator.yaml](https://github.com/rh-messaging/activemq-artemis-operator/blob/0.6.3/deploy/operator.yaml)
-within which you will want to update the [spec.containers.image](https://github.com/rh-messaging/activemq-artemis-operator/blob/0.6.3/deploy/operator.yaml#L18-L19)
+In the activemq-artemis-operator/deploy directory you should see [operator.yaml](https://github.com/kibiluzbad/activemq-artemis-operator/blob/0.6.3/deploy/operator.yaml)
+within which you will want to update the [spec.containers.image](https://github.com/kibiluzbad/activemq-artemis-operator/blob/0.6.3/deploy/operator.yaml#L18-L19)
 with the correct location for the activemq-artemis-operator container image that you either pulled or [built](building.md).
 
 As per the [operator-framework/operator-sdk](https://github.com/operator-framework/operator-sdk) Quick Start we first
@@ -81,7 +81,7 @@ exec /activemq-artemis-operator/activemq-artemis-operator
 ## Deploying the broker
 
 Now that the operator is running and listening for changes related to our crd we can deploy our basic broker custom
-resource instance for 'example-activemqartemis' from [broker_v1alpha1_activemqartemis_cr.yaml](https://github.com/rh-messaging/activemq-artemis-operator/blob/0.6.3/deploy/crs/broker_v1alpha1_activemqartemis_cr.yaml)
+resource instance for 'example-activemqartemis' from [broker_v1alpha1_activemqartemis_cr.yaml](https://github.com/kibiluzbad/activemq-artemis-operator/blob/0.6.3/deploy/crs/broker_v1alpha1_activemqartemis_cr.yaml)
 which looks like
 
 ```$xslt
@@ -95,7 +95,7 @@ spec:
   image: registry.redhat.io/amq7/amq-broker:7.4
 ```  
 
-Note in particular the [spec.image:](https://github.com/rh-messaging/activemq-artemis-operator/blob/0.6.3/deploy/crs/broker_v1alpha1_activemqartemis_cr.yaml#L8)
+Note in particular the [spec.image:](https://github.com/kibiluzbad/activemq-artemis-operator/blob/0.6.3/deploy/crs/broker_v1alpha1_activemqartemis_cr.yaml#L8)
 which identifies the container image to use to launch the AMQ Broker. Ignore the size as its unused at the moment.
 
 To deploy the broker we simply execute
@@ -282,9 +282,9 @@ activemqartemis.broker.amq.io "example-activemqartemis" deleted
 ### Overview
 
 Very basic, non-robust, functionality for adding and removing queues via custom resource definitions has been added. Of interest are two
-additional yaml files, [broker_v1alpha1_activemqartemisaddress_crd.yaml](https://github.com/rh-messaging/activemq-artemis-operator/blob/master/deploy/crds/broker_v1alpha1_activemqartemisaddress_crd.yaml)
+additional yaml files, [broker_v1alpha1_activemqartemisaddress_crd.yaml](https://github.com/kibiluzbad/activemq-artemis-operator/blob/master/deploy/crds/broker_v1alpha1_activemqartemisaddress_crd.yaml)
 which provides the custom resource definition for an ActiveMQArtemisAddress and an example implementation of a custom
-resource based on this crd, [broker_v1alpha1_activemqartemisaddress_cr.yaml](https://github.com/rh-messaging/activemq-artemis-operator/blob/master/deploy/crs/broker_v1alpha1_activemqartemisaddress_cr.yaml)
+resource based on this crd, [broker_v1alpha1_activemqartemisaddress_cr.yaml](https://github.com/kibiluzbad/activemq-artemis-operator/blob/master/deploy/crs/broker_v1alpha1_activemqartemisaddress_cr.yaml)
 
 In the implemented custom resource you will note the following of interest:
 
@@ -297,7 +297,7 @@ spec:
 ```
 
 Note that for the moment in this initial implementation each of the three fields; addressName, queueName,
-and routingType are required as per the [crd](https://github.com/rh-messaging/activemq-artemis-operator/blob/master/deploy/crds/broker_v1alpha1_activemqartemisaddress_crd.yaml#L35-L39).
+and routingType are required as per the [crd](https://github.com/kibiluzbad/activemq-artemis-operator/blob/master/deploy/crds/broker_v1alpha1_activemqartemisaddress_crd.yaml#L35-L39).
 This will possibly be relaxed in the future when the feature is more mature.
 
 ### Deploying the ActiveMQArtemisAddress crd

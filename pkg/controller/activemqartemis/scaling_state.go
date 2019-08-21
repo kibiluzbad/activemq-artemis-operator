@@ -2,12 +2,12 @@ package activemqartemis
 
 import (
 	"context"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/resources/ingresses"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/resources/routes"
-	svc "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/services"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/utils/env"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/utils/fsm"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/utils/selectors"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/ingresses"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/routes"
+	svc "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/services"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/env"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/fsm"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/selectors"
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"

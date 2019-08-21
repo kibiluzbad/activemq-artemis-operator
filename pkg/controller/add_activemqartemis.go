@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemis"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
 )
 
 func init() {

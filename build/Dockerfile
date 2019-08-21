@@ -7,11 +7,11 @@ ENV OPERATOR=/activemq-artemis-operator/activemq-artemis-operator \
 # Allow Go to retrieve the dependencies for the build step
 RUN apk add --no-cache git
 
-RUN mkdir -p ${GOPATH}/src/github.com/rh-messaging/activemq-artemis-operator/bin
+RUN mkdir -p ${GOPATH}/src/github.com/kibiluzbad/activemq-artemis-operator/bin
 RUN mkdir -p /activemq-artemis-operator
-ADD . ${GOPATH}/src/github.com/rh-messaging/activemq-artemis-operator
-WORKDIR ${GOPATH}/src/github.com/rh-messaging/activemq-artemis-operator
-RUN go build -v -o ${OPERATOR} ${GOPATH}/src/github.com/rh-messaging/activemq-artemis-operator/cmd/manager
+ADD . ${GOPATH}/src/github.com/kibiluzbad/activemq-artemis-operator
+WORKDIR ${GOPATH}/src/github.com/kibiluzbad/activemq-artemis-operator
+RUN go build -v -o ${OPERATOR} ${GOPATH}/src/github.com/kibiluzbad/activemq-artemis-operator/cmd/manager
 
 FROM alpine:3.8
 
@@ -23,7 +23,7 @@ ENV OPERATOR=/activemq-artemis-operator/activemq-artemis-operator \
 ENV HOME=/home/${USER_NAME}
 
 COPY --from=build-env ${OPERATOR} /activemq-artemis-operator/
-COPY --from=build-env ${GOPATH}/src/github.com/rh-messaging/activemq-artemis-operator/build/bin /home/activemq-artemis-operator/bin
+COPY --from=build-env ${GOPATH}/src/github.com/kibiluzbad/activemq-artemis-operator/build/bin /home/activemq-artemis-operator/bin
 
 RUN mkdir -p ${HOME} && \
     chown -R ${USER_UID}:0 ${HOME} && \

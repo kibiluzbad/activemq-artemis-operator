@@ -6,9 +6,9 @@ import (
 	"strconv"
 
 	mgmt "github.com/kibiluzbad/activemq-artemis-management"
-	brokerv1alpha1 "github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
-	aa "github.com/rh-messaging/activemq-artemis-operator/pkg/controller/activemqartemis"
-	ss "github.com/rh-messaging/activemq-artemis-operator/pkg/resources/statefulsets"
+	brokerv1alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	aa "github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
+	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -117,7 +117,7 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 		return reconcile.Result{}, err
 	} else {
 		err = nil
-		if addressInstance.Spec.QueueName != "" {
+		if instance.Spec.QueueName != "" {
 			err = createQueue(instance, request, r.client)
 		} else {
 			err = createAddres(instance, request, r.client)
@@ -169,12 +169,12 @@ func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
 				continue
 			}
-			_, err := a.createAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
+			_, err := a.CreateAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
 			if nil != err {
-				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.QueueName)
+				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
 				break
 			} else {
-				reqLogger.Info("Created ActiveMQArtemisAddress for " + instance.Spec.QueueName)
+				reqLogger.Info("Created ActiveMQArtemisAddress TEST for " + instance.Spec.AddressName)
 			}
 		}
 	}

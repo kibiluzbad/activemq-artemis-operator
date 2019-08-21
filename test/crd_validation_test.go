@@ -3,7 +3,7 @@ package test
 import (
 	"github.com/RHsyseng/operator-utils/pkg/validation"
 	"github.com/ghodss/yaml"
-	brokerv1alpha1 "github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	brokerv1alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"strings"

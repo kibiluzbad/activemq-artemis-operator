@@ -18,7 +18,7 @@ package draincontroller
 
 import (
 	"fmt"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/resources/statefulsets"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"

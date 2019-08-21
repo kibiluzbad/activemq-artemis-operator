@@ -3,8 +3,8 @@ package routes
 import (
 	"context"
 
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	routev1 "github.com/openshift/api/route/v1"
-	"github.com/rh-messaging/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

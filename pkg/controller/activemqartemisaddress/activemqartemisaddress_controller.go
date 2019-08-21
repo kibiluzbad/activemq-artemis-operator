@@ -120,7 +120,7 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 		if instance.Spec.QueueName != "" {
 			err = createQueue(instance, request, r.client)
 		} else {
-			err = createAddres(instance, request, r.client)
+			err = createAddress(instance, request, r.client)
 		}
 		if nil == err {
 			namespacedNameToAddressName[request.NamespacedName] = *instance //.Spec.QueueName
@@ -223,7 +223,7 @@ func deleteAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 	artemisArray := getPodBrokers(instance, request, client)
 	if nil != artemisArray {
 		for _, a := range artemisArray {
-			_, err := a.DeleteAddress(instance.Spec.AddressName, true)
+			_, err := a.DeleteAddressForce(instance.Spec.AddressName, true)
 			if nil != err {
 				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
 				break

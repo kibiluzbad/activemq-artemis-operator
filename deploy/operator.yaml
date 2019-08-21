@@ -16,7 +16,7 @@ spec:
       containers:
         - name: activemq-artemis-operator
           # Replace this with the built image name
-          image: kibiluzbad/activemq-artemis-operator:0.6.4-3
+          image: kibiluzbad/activemq-artemis-operator:0.6.4-4
           command:
             - /home/activemq-artemis-operator/bin/entrypoint
           args:

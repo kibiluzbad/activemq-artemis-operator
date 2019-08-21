@@ -68,11 +68,7 @@ required = [
 
 [[constraint]]
   name = "github.com/kibiluzbad/activemq-artemis-management"
-  revision = "0da048bb52c4b23488f252ff0d315a774fb3b73c"
-
-[[constraint]]
-  name = "github.com/kibiluzbad/activemq-artemis-operator"
-  revision = "9a509adf7c84a5317f6efb44ce8395f69573f3ca"
+  branch = "master"
 
 [prune]
   go-tests = true

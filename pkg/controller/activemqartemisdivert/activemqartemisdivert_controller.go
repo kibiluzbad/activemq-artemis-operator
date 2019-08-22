@@ -1,4 +1,4 @@
-package activemqartemisaddress
+package activemqartemisdivert
 
 import (
 	"context"
@@ -22,15 +22,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
-var log = logf.Log.WithName("controller_activemqartemisaddress")
-var namespacedNameToAddressName = make(map[types.NamespacedName]brokerv1alpha1.ActiveMQArtemisAddress)
+var log = logf.Log.WithName("controller_activemqartemisdivert")
+var namespacedNameToDivertName = make(map[types.NamespacedName]brokerv1alpha1.ActiveMQArtemisDivert)
 
 /**
 * USER ACTION REQUIRED: This is a scaffold file intended for the user to modify with their own Controller
 * business logic.  Delete these comments after modifying this file.*
  */
 
-// Add creates a new ActiveMQArtemisAddress Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new ActiveMQArtemisDivert Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -38,28 +38,28 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileActiveMQArtemisAddress{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileActiveMQArtemisDivert{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
-	c, err := controller.New("activemqartemisaddress-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("activemqartemisdivert-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource ActiveMQArtemisAddress
-	err = c.Watch(&source.Kind{Type: &brokerv1alpha1.ActiveMQArtemisAddress{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource ActiveMQArtemisDivert
+	err = c.Watch(&source.Kind{Type: &brokerv1alpha1.ActiveMQArtemisDivert{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
 	// TODO(user): Modify this to be the types you create that are owned by the primary resource
-	// Watch for changes to secondary resource Pods and requeue the owner ActiveMQArtemisAddress
+	// Watch for changes to secondary resource Pods and requeue the owner ActiveMQArtemisDivert
 	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &brokerv1alpha1.ActiveMQArtemisAddress{},
+		OwnerType:    &brokerv1alpha1.ActiveMQArtemisDivert{},
 	})
 	if err != nil {
 		return err
@@ -68,43 +68,38 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-var _ reconcile.Reconciler = &ReconcileActiveMQArtemisAddress{}
+var _ reconcile.Reconciler = &ReconcileActiveMQArtemisDivert{}
 
-// ReconcileActiveMQArtemisAddress reconciles a ActiveMQArtemisAddress object
-type ReconcileActiveMQArtemisAddress struct {
+// ReconcileActiveMQArtemisDivert reconciles a ActiveMQArtemisDivert object
+type ReconcileActiveMQArtemisDivert struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client client.Client
 	scheme *runtime.Scheme
 }
 
-// Reconcile reads that state of the cluster for a ActiveMQArtemisAddress object and makes changes based on the state read
-// and what is in the ActiveMQArtemisAddress.Spec
+// Reconcile reads that state of the cluster for a ActiveMQArtemisDivert object and makes changes based on the state read
+// and what is in the ActiveMQArtemisDivert.Spec
 // TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
 // a Pod as an example
 // Note:
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
-func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileActiveMQArtemisDivert) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Reconciling ActiveMQArtemisAddress")
+	reqLogger.Info("Reconciling ActiveMQArtemisDivert")
 
-	// Fetch the ActiveMQArtemisAddress instance
-	instance := &brokerv1alpha1.ActiveMQArtemisAddress{}
+	// Fetch the ActiveMQArtemisDivert instance
+	instance := &brokerv1alpha1.ActiveMQArtemisDivert{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, instance)
 	if err != nil {
 		// Delete action
-		addressInstance, lookupSucceeded := namespacedNameToAddressName[request.NamespacedName]
+		divertInstance, lookupSucceeded := namespacedNameToDivertName[request.NamespacedName]
 		if lookupSucceeded {
 
-			if addressInstance.Spec.QueueName != "" {
-				err = deleteQueue(&addressInstance, request, r.client)
-			} else {
-				err = deleteAddress(&addressInstance, request, r.client)
-			}
-
-			delete(namespacedNameToAddressName, request.NamespacedName)
+			err = deleteDivert(&divertInstance, request, r.client)
+			delete(namespacedNameToDivertName, request.NamespacedName)
 		}
 		if errors.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request.
@@ -115,40 +110,35 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 
 		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
-	} else {
-		err = nil
-		if instance.Spec.QueueName != "" {
-			err = createQueue(instance, request, r.client)
-		} else {
-			err = createAddress(instance, request, r.client)
-		}
-		if nil == err {
-			namespacedNameToAddressName[request.NamespacedName] = *instance //.Spec.QueueName
-		}
+	}
+
+	err = createDivert(instance, request, r.client)
+	if nil == err {
+		namespacedNameToDivertName[request.NamespacedName] = *instance //.Spec.QueueName
 	}
 
 	return reconcile.Result{}, nil
 }
 
-func createQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+func createDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Creating ActiveMQArtemisAddress")
+	reqLogger.Info("Creating ActiveMQArtemisDivert")
 
 	var err error
 	artemisArray := getPodBrokers(instance, request, client)
 	if nil != artemisArray {
 		for _, a := range artemisArray {
 			if nil == a {
-				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
+				reqLogger.Info("Creating ActiveMQArtemisDivert artemisArray had a nil!")
 				continue
 			}
-			_, err := a.CreateQueue(instance.Spec.AddressName, instance.Spec.QueueName, instance.Spec.RoutingType)
+			_, err := a.CreateDivert(instance.Spec.Name, instance.Spec.RoutingName, instance.Spec.Address, instance.Spec.ForwardingAddress, instance.Spec.Exclusive)
 			if nil != err {
-				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.QueueName)
+				reqLogger.Info("Creating ActiveMQArtemisDivert error for " + instance.Spec.Name)
 				break
 			} else {
-				reqLogger.Info("Created ActiveMQArtemisAddress for " + instance.Spec.QueueName)
+				reqLogger.Info("Created ActiveMQArtemisDivert for " + instance.Spec.Name)
 			}
 		}
 	}
@@ -156,25 +146,21 @@ func createQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconc
 	return err
 }
 
-func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+func deleteDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Creating ActiveMQArtemisAddress")
+	reqLogger.Info("Deleting ActiveMQArtemisDivert")
 
 	var err error
 	artemisArray := getPodBrokers(instance, request, client)
 	if nil != artemisArray {
 		for _, a := range artemisArray {
-			if nil == a {
-				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
-				continue
-			}
-			_, err := a.CreateAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
+			_, err := a.DeleteDivert(instance.Spec.Name)
 			if nil != err {
-				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
+				reqLogger.Info("Deleting ActiveMQArtemisDivert error for " + instance.Spec.Name)
 				break
 			} else {
-				reqLogger.Info("Created ActiveMQArtemisAddress TEST for " + instance.Spec.AddressName)
+				reqLogger.Info("Deleted ActiveMQArtemisDivert for " + instance.Spec.Name)
 			}
 		}
 	}
@@ -182,61 +168,7 @@ func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 	return err
 }
 
-func deleteQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
-
-	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Deleting ActiveMQArtemisAddress")
-
-	var err error
-	artemisArray := getPodBrokers(instance, request, client)
-	if nil != artemisArray {
-		for _, a := range artemisArray {
-			_, err := a.DeleteQueue(instance.Spec.QueueName)
-			if nil != err {
-				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.QueueName)
-				break
-			} else {
-				reqLogger.Info("Deleted ActiveMQArtemisAddress for " + instance.Spec.QueueName)
-				reqLogger.Info("Checking parent address for bindings " + instance.Spec.AddressName)
-				bindingsData, err := a.ListBindingsForAddress(instance.Spec.AddressName)
-				if nil == err {
-					if "" == bindingsData.Value {
-						reqLogger.Info("No bindings found removing " + instance.Spec.AddressName)
-						a.DeleteAddress(instance.Spec.AddressName)
-					} else {
-						reqLogger.Info("Bindings found, not removing " + instance.Spec.AddressName)
-					}
-				}
-			}
-		}
-	}
-
-	return err
-}
-
-func deleteAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
-
-	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Deleting ActiveMQArtemisAddress")
-
-	var err error
-	artemisArray := getPodBrokers(instance, request, client)
-	if nil != artemisArray {
-		for _, a := range artemisArray {
-			_, err := a.DeleteAddressForce(instance.Spec.AddressName, true)
-			if nil != err {
-				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
-				break
-			} else {
-				reqLogger.Info("Deleted ActiveMQArtemisAddress for " + instance.Spec.AddressName)
-			}
-		}
-	}
-
-	return err
-}
-
-func getPodBrokers(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) []*mgmt.Artemis {
+func getPodBrokers(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) []*mgmt.Artemis {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Getting Pod Brokers")

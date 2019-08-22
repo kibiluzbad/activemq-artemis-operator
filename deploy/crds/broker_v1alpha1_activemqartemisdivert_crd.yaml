@@ -31,6 +31,8 @@ spec:
               type: string
             routingName:
               type: string
+            address:
+              type: string
             forwardingAddress:
               type: string
             exclusive:
@@ -38,6 +40,7 @@ spec:
           required:
             - name
             - routingName
+            - address
             - forwardingAddress
             - exclusive
           type: object

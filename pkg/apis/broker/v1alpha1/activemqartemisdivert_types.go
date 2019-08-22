@@ -15,6 +15,7 @@ type ActiveMQArtemisDivertSpec struct {
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
 	Name              string `json:"name"`
 	RoutingName       string `json:"routingName"`
+	Address           string `json:"address"`
 	ForwardingAddress string `json:"forwardingAddress"`
 	Exclusive         bool   `json:"exclusive"`
 }

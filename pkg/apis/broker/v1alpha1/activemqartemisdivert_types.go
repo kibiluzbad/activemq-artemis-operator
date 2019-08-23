@@ -18,6 +18,8 @@ type ActiveMQArtemisDivertSpec struct {
 	Address           string `json:"address"`
 	ForwardingAddress string `json:"forwardingAddress"`
 	Exclusive         bool   `json:"exclusive"`
+	Filter            string `json:"filter"`
+	Transformer       string `json:"transformer"`
 }
 
 // ActiveMQArtemisDivertStatus defines the observed state of ActiveMQArtemisDivert

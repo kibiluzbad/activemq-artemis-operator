@@ -133,11 +133,19 @@ func createDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconc
 				reqLogger.Info("Creating ActiveMQArtemisDivert artemisArray had a nil!")
 				continue
 			}
-			_, err := a.CreateDivert(instance.Spec.Name, instance.Spec.RoutingName, instance.Spec.Address, instance.Spec.ForwardingAddress, instance.Spec.Exclusive)
-			if nil != err {
+			result, err := a.CreateDivert(instance.Spec.Name,
+				instance.Spec.RoutingName,
+				instance.Spec.Address,
+				instance.Spec.ForwardingAddress,
+				instance.Spec.Exclusive,
+				instance.Spec.Filter,
+				instance.Spec.Transformer)
+			if nil != err || result.Status != 200 {
+				reqLogger.Info("Error: " + result.Error + ", Status: " + strconv.Itoa(result.Status))
 				reqLogger.Info("Creating ActiveMQArtemisDivert error for " + instance.Spec.Name)
 				break
 			} else {
+
 				reqLogger.Info("Created ActiveMQArtemisDivert for " + instance.Spec.Name)
 			}
 		}

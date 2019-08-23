@@ -25,3 +25,4 @@ spec:
   statefulsetName: example-activemqartemis-ss
   addressName: jms.topic.transacao.999999
   routingType: MULTICAST
+  

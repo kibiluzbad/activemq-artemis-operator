@@ -1,0 +1,17 @@
+---
+apiVersion: broker.amq.io/v1alpha2
+kind: ActiveMQArtemisDivert
+metadata:
+  name: transacao-divert
+  labels:
+    ActiveMQArtemis: example-activemqartemis
+    application: example-activemqartemis-app
+spec:
+  # Add fields here
+  statefulsetName: example-activemqartemis-ss
+  name: transacao-divert
+  routingName: transacao-divert
+  address: jms.queue.transacao.#
+  forwardingAddress: jms.queue.transacao
+  exclusive: true
+  transformer: ""

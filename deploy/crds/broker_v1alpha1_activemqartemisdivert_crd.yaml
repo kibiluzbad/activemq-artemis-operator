@@ -37,6 +37,10 @@ spec:
               type: string
             exclusive:
               type: boolean
+            filter:
+              type: string
+            transformer:
+              type: string
           required:
             - name
             - routingName

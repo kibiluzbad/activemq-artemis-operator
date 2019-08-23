@@ -339,14 +339,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:bd2eb6f1406443dee6fa2ed362bcf35bfe0b0f4e69b7ae67c2f40df7bfbe79ad"
+  digest = "1:a7d4e58588afeb20ca4d9ae986bcf7ab4249b09cdad89472cd09adc0c8d8de14"
   name = "github.com/kibiluzbad/activemq-artemis-management"
   packages = [
     ".",
     "jolokia",
   ]
   pruneopts = "NT"
-  revision = "111e1bf0effa25e0fcda380835580dc577ea3fcd"
+  revision = "c5919f3574a66bf5927c055a73056811a6885602"
 
 [[projects]]
   branch = "master"
@@ -677,7 +677,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2122b76d68b961ef3d1f2db2e5143a7f60e737a2ba839284d5e8b385575d8d66"
+  digest = "1:db7dd7c37806ac90cf9f96b40726257bb5db7288d6e37198d15cb4b7a08d0032"
   name = "golang.org/x/tools"
   packages = [
     "go/ast/astutil",
@@ -694,7 +694,7 @@
     "internal/semver",
   ]
   pruneopts = "NT"
-  revision = "b1e2c8edcefde75c7687c448a1ae9f07944fd462"
+  revision = "c4a336ef6a2feb97e86b0c7ebdd500717074f42b"
 
 [[projects]]
   digest = "1:25a3797e84a65cc761261eb04134cc03bc64861ef37d1242d92b199bd955800f"

@@ -2,11 +2,13 @@ package statefulsets
 
 import (
 	"context"
+
 	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
 	pvc "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/persistentvolumeclaims"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/pods"
 	svc "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/services"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/namer"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/selectors"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"

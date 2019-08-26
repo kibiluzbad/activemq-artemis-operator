@@ -257,7 +257,6 @@ func schema_pkg_apis_broker_v2alpha1_ActiveMQArtemisSpec(ref common.ReferenceCal
 									},
 								},
 							},
-							Ref: ref("github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1.CommonConfig"),
 						},
 					},
 				},

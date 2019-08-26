@@ -1,12 +1,9 @@
 /*
 Copyright 2017 The Kubernetes Authors.
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,8 +15,10 @@ package draincontroller
 
 import (
 	"fmt"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	"time"
+
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/environments"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -38,11 +37,12 @@ import (
 	"k8s.io/client-go/util/workqueue"
 
 	"encoding/json"
-	"k8s.io/apimachinery/pkg/labels"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sort"
 	"strconv"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/labels"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 var log = logf.Log.WithName("controller_activemqartemisscaledown")

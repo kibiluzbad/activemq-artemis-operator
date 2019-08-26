@@ -2,8 +2,10 @@ package activemqartemis
 
 import (
 	"context"
+
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/fsm"
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"

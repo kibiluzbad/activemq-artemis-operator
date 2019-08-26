@@ -2,9 +2,11 @@ package activemqartemis
 
 import (
 	"context"
+
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/pods"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/serviceports"
+	svc "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/services"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/fsm"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/selectors"

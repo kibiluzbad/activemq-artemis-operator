@@ -1,0 +1,14 @@
+---
+apiVersion: broker.amq.io/v1alpha2
+kind: ActiveMQArtemisUser
+metadata:
+  name: usr999999
+  labels:
+    ActiveMQArtemis: example-activemqartemis
+    application: example-activemqartemis-app
+spec:
+  # Add fields here
+  statefulsetName: example-activemqartemis-ss
+  userName: usr999999
+  password: usr999999
+  roles: est-999999-consume-role,est-999999-full-role,est-999999-send-role,est-999999-consume-role

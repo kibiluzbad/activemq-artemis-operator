@@ -14,4 +14,4 @@ spec:
   address: jms.queue.transacao.#
   forwardingAddress: jms.queue.transacao
   exclusive: true
-  transformer: ""
+  transformer: "org.apache.activemq.artemis.core.server.transformer.AddHeadersTransformer"

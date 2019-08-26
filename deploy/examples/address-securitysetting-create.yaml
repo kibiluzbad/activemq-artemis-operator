@@ -1,0 +1,19 @@
+---
+apiVersion: broker.amq.io/v1alpha2
+kind: ActiveMQArtemisSecuritySetting
+metadata:
+  name: security-setting-999999
+  labels:
+    ActiveMQArtemis: example-activemqartemis
+    application: example-activemqartemis-app
+spec:
+  # Add fields here
+  statefulsetName: example-activemqartemis-ss
+  addressMatch: jms.topic.*.999999
+  consume: est-999999-consume-role, admin
+  send: est-999999-send-role,a dmin
+  createDurableQueueRoles: est-999999-full-role, admin
+  deleteDurableQueueRoles: est-999999-full-role, admin
+  createNonDurableQueueRoles: est-999999-full-role, admin
+  deleteNonDurableQueueRoles: est-999999-full-role, admin
+  manage: est-999999-full-role, admin

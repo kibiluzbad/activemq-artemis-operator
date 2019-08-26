@@ -5,7 +5,7 @@ import (
 	"fmt"
 	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
 	mgmt "github.com/kibiluzbad/activemq-artemis-management"
-	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
 	aa "github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	corev1 "k8s.io/api/core/v1"

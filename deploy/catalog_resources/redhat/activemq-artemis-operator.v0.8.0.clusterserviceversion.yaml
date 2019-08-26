@@ -1,4 +1,4 @@
-apiVersion: operators.coreos.com/v1alpha1
+apiVersion: operators.coreos.com/v2alpha1
 kind: ClusterServiceVersion
 metadata:
   name: activemq-artemis-operator.v0.8.0
@@ -94,7 +94,7 @@ spec:
           - name: v2alpha1
             served: true
             storage: true
-          - name: v1alpha1
+          - name: v2alpha1
             served: false
             storage: false
         kind: ActiveMQArtemis

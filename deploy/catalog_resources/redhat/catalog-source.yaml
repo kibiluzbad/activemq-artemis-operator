@@ -8,7 +8,7 @@ items:
       namespace: operator-lifecycle-manager
     data:
       clusterServiceVersions: |
-        - apiVersion: operators.coreos.com/v1alpha1
+        - apiVersion: operators.coreos.com/v2alpha1
           kind: ClusterServiceVersion
           metadata:
             name: activemq-artemis-operator.v0.8.0
@@ -104,7 +104,7 @@ items:
                     - name: v2alpha1
                       served: true
                       storage: true
-                    - name: v1alpha1
+                    - name: v2alpha1
                       served: false
                       storage: false
                   kind: ActiveMQArtemis
@@ -460,7 +460,7 @@ items:
             - name: v2alpha1
               served: true
               storage: true
-            - name: v1alpha1
+            - name: v2alpha1
               served: false
               storage: false
         - apiVersion: apiextensions.k8s.io/v1beta1
@@ -509,7 +509,7 @@ items:
             - name: v1alpha2
               served: true
               storage: false
-            - name: v1alpha1
+            - name: v2alpha1
               served: false
               storage: false
         - apiVersion: apiextensions.k8s.io/v1beta1
@@ -555,7 +555,7 @@ items:
             - name: v2alpha1
               served: true
               storage: true
-            - name: v1alpha1
+            - name: v2alpha1
               served: false
               storage: false
       packages: >
@@ -565,7 +565,7 @@ items:
             - name: alpha
               currentCSV: activemq-artemis-operator.v0.8.0
 
-  - apiVersion: operators.coreos.com/v1alpha1
+  - apiVersion: operators.coreos.com/v2alpha1
     kind: CatalogSource
     metadata:
       name: activemq-artemis-resources

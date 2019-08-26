@@ -31,7 +31,7 @@ ${CRDActivemqartemisscaledown}
       packages: >
 ${PKG}
 
-  - apiVersion: operators.coreos.com/v1alpha1
+  - apiVersion: operators.coreos.com/v2alpha1
     kind: CatalogSource
     metadata:
       name: activemq-artemis-resources

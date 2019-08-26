@@ -1,7 +1,7 @@
 package apis
 
 import (
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
 	routev1 "github.com/openshift/api/route/v1"
 )
 

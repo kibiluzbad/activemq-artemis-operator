@@ -23,7 +23,7 @@ spec:
             # Explicitly set the logging level.
             # Valid values are debug, info, and error
             # from most to least
-            - '--zap-level info'
+            - '--zap-level debug'
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

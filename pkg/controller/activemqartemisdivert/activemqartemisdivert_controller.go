@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	mgmt "github.com/kibiluzbad/activemq-artemis-management"
-	brokerv1alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	aa "github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	corev1 "k8s.io/api/core/v1"
@@ -23,7 +23,7 @@ import (
 )
 
 var log = logf.Log.WithName("controller_activemqartemisdivert")
-var namespacedNameToDivertName = make(map[types.NamespacedName]brokerv1alpha1.ActiveMQArtemisDivert)
+var namespacedNameToDivertName = make(map[types.NamespacedName]brokerv2alpha1.ActiveMQArtemisDivert)
 
 /**
 * USER ACTION REQUIRED: This is a scaffold file intended for the user to modify with their own Controller
@@ -50,7 +50,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	}
 
 	// Watch for changes to primary resource ActiveMQArtemisDivert
-	err = c.Watch(&source.Kind{Type: &brokerv1alpha1.ActiveMQArtemisDivert{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &brokerv2alpha1.ActiveMQArtemisDivert{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Watch for changes to secondary resource Pods and requeue the owner ActiveMQArtemisDivert
 	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &brokerv1alpha1.ActiveMQArtemisDivert{},
+		OwnerType:    &brokerv2alpha1.ActiveMQArtemisDivert{},
 	})
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func (r *ReconcileActiveMQArtemisDivert) Reconcile(request reconcile.Request) (r
 	reqLogger.Info("Reconciling ActiveMQArtemisDivert")
 
 	// Fetch the ActiveMQArtemisDivert instance
-	instance := &brokerv1alpha1.ActiveMQArtemisDivert{}
+	instance := &brokerv2alpha1.ActiveMQArtemisDivert{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, instance)
 	if err != nil {
 		// Delete action
@@ -120,7 +120,7 @@ func (r *ReconcileActiveMQArtemisDivert) Reconcile(request reconcile.Request) (r
 	return reconcile.Result{}, nil
 }
 
-func createDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
+func createDivert(instance *brokerv2alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Creating ActiveMQArtemisDivert")
@@ -154,7 +154,7 @@ func createDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconc
 	return err
 }
 
-func deleteDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
+func deleteDivert(instance *brokerv2alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Deleting ActiveMQArtemisDivert")
@@ -176,7 +176,7 @@ func deleteDivert(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconc
 	return err
 }
 
-func getPodBrokers(instance *brokerv1alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) []*mgmt.Artemis {
+func getPodBrokers(instance *brokerv2alpha1.ActiveMQArtemisDivert, request reconcile.Request, client client.Client) []*mgmt.Artemis {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Getting Pod Brokers")

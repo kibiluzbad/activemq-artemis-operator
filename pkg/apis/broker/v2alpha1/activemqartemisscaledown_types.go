@@ -1,4 +1,4 @@
-package v1alpha1
+package v2alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,10 +13,8 @@ type ActiveMQArtemisScaledownSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
-	MasterURL  string `json:"masterURL"`
-	Kubeconfig string `json:"kubeconfig"`
-	Namespace  string `json:"namespace"`
-	LocalOnly  bool   `json:"localOnly"`
+	//Namespace  string `json:"namespace"`
+	LocalOnly bool `json:"localOnly"`
 }
 
 // ActiveMQArtemisScaledownStatus defines the observed state of ActiveMQArtemisScaledown

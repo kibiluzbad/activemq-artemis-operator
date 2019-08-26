@@ -2,17 +2,12 @@ package activemqartemis
 
 import (
 	"context"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/ingresses"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/routes"
-	svc "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/services"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/env"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/fsm"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/selectors"
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"strconv"
 	"time"
 )
 
@@ -49,7 +44,7 @@ func (ss *ScalingState) Enter(previousStateID int) error {
 	var err error = nil
 
 	currentStatefulSet := &appsv1.StatefulSet{}
-	err = ss.parentFSM.r.client.Get(context.TODO(), types.NamespacedName{Name: ss.parentFSM.customResource.Name + "-ss", Namespace: ss.parentFSM.customResource.Namespace}, currentStatefulSet)
+	err = ss.parentFSM.r.client.Get(context.TODO(), types.NamespacedName{Name: statefulsets.NameBuilder.Name(), Namespace: ss.parentFSM.customResource.Namespace}, currentStatefulSet)
 	for {
 		if err != nil && errors.IsNotFound(err) {
 			reqLogger.Error(err, "Failed to get StatefulSet.", "Deployment.Namespace", currentStatefulSet.Namespace, "Deployment.Name", currentStatefulSet.Name)
@@ -77,7 +72,7 @@ func (ss *ScalingState) Update() (error, int) {
 	var nextStateID int = ScalingID
 
 	currentStatefulSet := &appsv1.StatefulSet{}
-	err = ss.parentFSM.r.client.Get(context.TODO(), types.NamespacedName{Name: ss.parentFSM.customResource.Name + "-ss", Namespace: ss.parentFSM.customResource.Namespace}, currentStatefulSet)
+	err = ss.parentFSM.r.client.Get(context.TODO(), types.NamespacedName{Name: statefulsets.NameBuilder.Name(), Namespace: ss.parentFSM.customResource.Namespace}, currentStatefulSet)
 	for {
 		if err != nil && errors.IsNotFound(err) {
 			reqLogger.Error(err, "Failed to get StatefulSet.", "Deployment.Namespace", currentStatefulSet.Namespace, "Deployment.Name", currentStatefulSet.Name)
@@ -121,113 +116,6 @@ func (ss *ScalingState) Exit() error {
 	reqLogger.Info("Exiting ScalingState")
 
 	var err error = nil
-
-	// Did we...
-	err = ss.configureServices()
-	err = ss.configureExternalNetworkAccess()
-
-	return err
-}
-
-func (rs *ScalingState) configureServices() error {
-
-	// Log where we are and what we're doing
-	reqLogger := log.WithValues("ActiveMQArtemis Name", rs.parentFSM.customResource.Name)
-	reqLogger.Info("CreatingK8sResourcesState configureServices")
-
-	var err error = nil
-	var i int32 = 0
-	ordinalString := ""
-
-	portNumber := int32(8161)
-	cr := rs.parentFSM.customResource
-	client := rs.parentFSM.r.client
-	scheme := rs.parentFSM.r.scheme
-	labels := selectors.LabelsForActiveMQArtemis(cr.Name)
-	for ; i < cr.Spec.Size; i++ {
-		ordinalString = strconv.Itoa(int(i))
-		labels["statefulset.kubernetes.io/pod-name"] = cr.Name + "-ss" + "-" + ordinalString
-
-		baseServiceName := "console-jolokia"
-		serviceDefinition := svc.NewServiceDefinitionForCR(cr, baseServiceName+"-"+ordinalString, portNumber, labels)
-		if err = svc.CreateService(cr, client, scheme, serviceDefinition); err != nil {
-			reqLogger.Info("Failure to create " + baseServiceName + " service " + ordinalString)
-			continue
-		}
-
-		baseServiceName = "all-protocol"
-		portNumber = int32(61616)
-		serviceDefinition = svc.NewServiceDefinitionForCR(cr, baseServiceName+"-"+ordinalString, portNumber, labels)
-		if err = svc.CreateService(cr, client, scheme, serviceDefinition); err != nil {
-			reqLogger.Info("Failure to create " + baseServiceName + " service " + ordinalString)
-			continue
-		}
-	}
-
-	return err
-}
-
-func (rs *ScalingState) configureExternalNetworkAccess() error {
-
-	var err error = nil
-	var isOpenshift bool = false
-
-	if isOpenshift, err = env.DetectOpenshift(); err != nil {
-		log.Error(err, "Failed to get env, will try kubernetes")
-	}
-	if isOpenshift {
-		log.Info("Environment is OpenShift")
-		err = rs.configureRoutes()
-	} else {
-		log.Info("Environment is not OpenShift, creating ingress")
-		err = rs.configureIngress()
-	}
-
-	return err
-}
-
-func (rs *ScalingState) configureIngress() error {
-
-	var err error = nil
-
-	if _, err = ingresses.RetrieveIngress(rs.parentFSM.customResource, rs.parentFSM.namespacedName, rs.parentFSM.r.client); err != nil {
-		// err means not found, so create routes
-		if _, err = ingresses.CreateNewIngress(rs.parentFSM.customResource, rs.parentFSM.r.client, rs.parentFSM.r.scheme); err == nil {
-		}
-	}
-
-	return err
-}
-
-func (rs *ScalingState) configureRoutes() error {
-
-	var err error = nil
-	var passthroughTLS bool
-
-	for i := 0; i < int(rs.parentFSM.customResource.Spec.Size); i++ {
-		passthroughTLS = false
-		targetPortName := "console-jolokia" + "-" + strconv.Itoa(i)
-		targetServiceName := rs.parentFSM.customResource.Name + "-service-" + targetPortName
-		log.Info("Checking route for " + targetPortName)
-
-		consoleJolokiaRoute := routes.NewRouteDefinitionForCR(rs.parentFSM.customResource, selectors.LabelsForActiveMQArtemis(rs.parentFSM.customResource.Name), targetServiceName, targetPortName, passthroughTLS)
-		if err = routes.RetrieveRoute(rs.parentFSM.customResource, rs.parentFSM.namespacedName, rs.parentFSM.r.client, consoleJolokiaRoute); err != nil {
-			routes.DeleteRoute(rs.parentFSM.customResource, rs.parentFSM.r.client, consoleJolokiaRoute)
-		}
-		if err = routes.CreateNewRoute(rs.parentFSM.customResource, rs.parentFSM.r.client, rs.parentFSM.r.scheme, consoleJolokiaRoute); err == nil {
-		}
-
-		targetPortName = "all-protocol" + "-" + strconv.Itoa(i)
-		targetServiceName = rs.parentFSM.customResource.Name + "-service-" + targetPortName
-		log.Info("Checking route for " + targetPortName)
-		passthroughTLS = true
-		allProtocolRoute := routes.NewRouteDefinitionForCR(rs.parentFSM.customResource, selectors.LabelsForActiveMQArtemis(rs.parentFSM.customResource.Name), targetServiceName, targetPortName, passthroughTLS)
-		if err = routes.RetrieveRoute(rs.parentFSM.customResource, rs.parentFSM.namespacedName, rs.parentFSM.r.client, allProtocolRoute); err != nil {
-			routes.DeleteRoute(rs.parentFSM.customResource, rs.parentFSM.r.client, allProtocolRoute)
-		}
-		if err = routes.CreateNewRoute(rs.parentFSM.customResource, rs.parentFSM.r.client, rs.parentFSM.r.scheme, allProtocolRoute); err == nil {
-		}
-	}
 
 	return err
 }

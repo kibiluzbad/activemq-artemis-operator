@@ -3,10 +3,9 @@ package activemqartemisaddress
 import (
 	"context"
 	"fmt"
-	"strconv"
-
+	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
 	mgmt "github.com/kibiluzbad/activemq-artemis-management"
-	brokerv1alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
+	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v1alpha1"
 	aa "github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	corev1 "k8s.io/api/core/v1"
@@ -23,7 +22,7 @@ import (
 )
 
 var log = logf.Log.WithName("controller_activemqartemisaddress")
-var namespacedNameToAddressName = make(map[types.NamespacedName]brokerv1alpha1.ActiveMQArtemisAddress)
+var namespacedNameToAddressName = make(map[types.NamespacedName]brokerv2alpha1.ActiveMQArtemisAddress)
 
 /**
 * USER ACTION REQUIRED: This is a scaffold file intended for the user to modify with their own Controller
@@ -50,7 +49,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	}
 
 	// Watch for changes to primary resource ActiveMQArtemisAddress
-	err = c.Watch(&source.Kind{Type: &brokerv1alpha1.ActiveMQArtemisAddress{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &brokerv2alpha1.ActiveMQArtemisAddress{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -59,7 +58,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Watch for changes to secondary resource Pods and requeue the owner ActiveMQArtemisAddress
 	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &brokerv1alpha1.ActiveMQArtemisAddress{},
+		OwnerType:    &brokerv2alpha1.ActiveMQArtemisAddress{},
 	})
 	if err != nil {
 		return err
@@ -91,7 +90,7 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 	reqLogger.Info("Reconciling ActiveMQArtemisAddress")
 
 	// Fetch the ActiveMQArtemisAddress instance
-	instance := &brokerv1alpha1.ActiveMQArtemisAddress{}
+	instance := &brokerv2alpha1.ActiveMQArtemisAddress{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, instance)
 	if err != nil {
 		// Delete action
@@ -130,7 +129,7 @@ func (r *ReconcileActiveMQArtemisAddress) Reconcile(request reconcile.Request) (
 	return reconcile.Result{}, nil
 }
 
-func createQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+func createQueue(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Creating ActiveMQArtemisAddress")
@@ -156,7 +155,7 @@ func createQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconc
 	return err
 }
 
-func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+func createAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Creating ActiveMQArtemisAddress")
@@ -182,7 +181,6 @@ func createAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 	return err
 }
 
-func deleteQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Deleting ActiveMQArtemisAddress")
@@ -214,7 +212,7 @@ func deleteQueue(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconc
 	return err
 }
 
-func deleteAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+func deleteAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Deleting ActiveMQArtemisAddress")
@@ -236,7 +234,6 @@ func deleteAddress(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 	return err
 }
 
-func getPodBrokers(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) []*mgmt.Artemis {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Getting Pod Brokers")
@@ -244,18 +241,18 @@ func getPodBrokers(instance *brokerv1alpha1.ActiveMQArtemisAddress, request reco
 	var artemisArray []*mgmt.Artemis
 	var err error
 
-	ssName, err := aa.GetStatefulSetName(request.Namespace)
+	ss.NameBuilder.Name()
 	if err != nil {
 		reqLogger.Error(err, "Failed to ge the statefulset name")
 	}
 
 	// Check to see if the statefulset already exists
 	ssNamespacedName := types.NamespacedName{
-		Name:      ssName + "-ss",
+		Name:      ss.NameBuilder.Name(),
 		Namespace: request.Namespace,
 	}
 
-	statefulset, err := ss.RetrieveStatefulSet(ssName, ssNamespacedName, client)
+	statefulset, err := ss.RetrieveStatefulSet(ss.NameBuilder.Name(), ssNamespacedName, client)
 	if nil != err {
 		reqLogger.Info("Statefulset: " + ssNamespacedName.Name + " not found")
 	} else {

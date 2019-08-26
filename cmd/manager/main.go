@@ -60,7 +60,7 @@ func main() {
 	// uniform and structured logs.
 	logf.SetLogger(zap.Logger())
 
-	isOpenshift, err1 := env.DetectOpenshift()
+	isOpenshift, err1 := environments.DetectOpenshift()
 	if err1 != nil {
 		log.Error(err1, "Failed to get env")
 		os.Exit(1)

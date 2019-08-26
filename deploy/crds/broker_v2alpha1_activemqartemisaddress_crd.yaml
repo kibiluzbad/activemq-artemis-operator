@@ -13,7 +13,6 @@ spec:
   scope: Namespaced
   subresources:
     status: {}
-  version: v1alpha2
   validation:
     openAPIV3Schema:
       properties:
@@ -25,8 +24,6 @@ spec:
           type: object
         spec:
           properties:
-            statefulsetName:
-              type: string
             addressName:
               type: string
             queueName:
@@ -39,10 +36,14 @@ spec:
           type: object
         status:
           type: object
+  version: v2alpha1
   versions:
-  - name: v1alpha2
+  - name: v2alpha1
     served: true
     storage: true
-  - name: v1alpha1
+  - name: v1alpha2
     served: true
+    storage: false
+  - name: v1alpha1
+    served: false
     storage: false

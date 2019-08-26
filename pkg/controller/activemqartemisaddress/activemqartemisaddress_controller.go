@@ -220,8 +220,8 @@ func getPodBrokers(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reco
 		}
 
 		// For each of the replicas
-		var i := 0
-		var replicas := int(*statefulset.Spec.Replicas)
+		i := 0
+		replicas := int(*statefulset.Spec.Replicas)
 		artemisArray = make([]*mgmt.Artemis, 0, replicas)
 		for i = 0; i < replicas; i++ {
 			s := statefulset.Name + "-" + strconv.Itoa(i)

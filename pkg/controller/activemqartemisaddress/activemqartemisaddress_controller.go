@@ -3,10 +3,10 @@ package activemqartemisaddress
 import (
 	"context"
 	"fmt"
-	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
+	"strconv"
+
 	mgmt "github.com/kibiluzbad/activemq-artemis-management"
 	brokerv2alpha1 "github.com/kibiluzbad/activemq-artemis-operator/pkg/apis/broker/v2alpha1"
-	aa "github.com/kibiluzbad/activemq-artemis-operator/pkg/controller/activemqartemis"
 	ss "github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/statefulsets"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -134,7 +134,7 @@ func createQueue(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconc
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Creating ActiveMQArtemisAddress")
 
-	var err error
+	var err error = nil
 	artemisArray := getPodBrokers(instance, request, client)
 	if nil != artemisArray {
 		for _, a := range artemisArray {
@@ -155,37 +155,12 @@ func createQueue(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconc
 	return err
 }
 
-func createAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
-
-	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Creating ActiveMQArtemisAddress")
-
-	var err error
-	artemisArray := getPodBrokers(instance, request, client)
-	if nil != artemisArray {
-		for _, a := range artemisArray {
-			if nil == a {
-				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
-				continue
-			}
-			_, err := a.CreateAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
-			if nil != err {
-				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
-				break
-			} else {
-				reqLogger.Info("Created ActiveMQArtemisAddress TEST for " + instance.Spec.AddressName)
-			}
-		}
-	}
-
-	return err
-}
-
+func deleteQueue(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Deleting ActiveMQArtemisAddress")
 
-	var err error
+	var err error = nil
 	artemisArray := getPodBrokers(instance, request, client)
 	if nil != artemisArray {
 		for _, a := range artemisArray {
@@ -212,28 +187,7 @@ func createAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reco
 	return err
 }
 
-func deleteAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
-
-	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Deleting ActiveMQArtemisAddress")
-
-	var err error
-	artemisArray := getPodBrokers(instance, request, client)
-	if nil != artemisArray {
-		for _, a := range artemisArray {
-			_, err := a.DeleteAddressForce(instance.Spec.AddressName, true)
-			if nil != err {
-				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
-				break
-			} else {
-				reqLogger.Info("Deleted ActiveMQArtemisAddress for " + instance.Spec.AddressName)
-			}
-		}
-	}
-
-	return err
-}
-
+func getPodBrokers(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) []*mgmt.Artemis {
 
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Getting Pod Brokers")
@@ -266,8 +220,8 @@ func deleteAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reco
 		}
 
 		// For each of the replicas
-		i := 0
-		replicas := int(*statefulset.Spec.Replicas)
+		var i := 0
+		var replicas := int(*statefulset.Spec.Replicas)
 		artemisArray = make([]*mgmt.Artemis, 0, replicas)
 		for i = 0; i < replicas; i++ {
 			s := statefulset.Name + "-" + strconv.Itoa(i)
@@ -287,4 +241,52 @@ func deleteAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reco
 	}
 
 	return artemisArray
+}
+
+func createAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+
+	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger.Info("Creating ActiveMQArtemisAddress")
+
+	var err error
+	artemisArray := getPodBrokers(instance, request, client)
+	if nil != artemisArray {
+		for _, a := range artemisArray {
+			if nil == a {
+				reqLogger.Info("Creating ActiveMQArtemisAddress artemisArray had a nil!")
+				continue
+			}
+			_, err := a.CreateAddress(instance.Spec.AddressName, instance.Spec.RoutingType)
+			if nil != err {
+				reqLogger.Info("Creating ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
+				break
+			} else {
+				reqLogger.Info("Created ActiveMQArtemisAddress for " + instance.Spec.AddressName)
+			}
+		}
+	}
+
+	return err
+}
+
+func deleteAddress(instance *brokerv2alpha1.ActiveMQArtemisAddress, request reconcile.Request, client client.Client) error {
+
+	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger.Info("Deleting ActiveMQArtemisAddress")
+
+	var err error = nil
+	artemisArray := getPodBrokers(instance, request, client)
+	if nil != artemisArray {
+		for _, a := range artemisArray {
+			_, err := a.DeleteAddressForce(instance.Spec.AddressName, true)
+			if nil != err {
+				reqLogger.Info("Deleting ActiveMQArtemisAddress error for " + instance.Spec.AddressName)
+				break
+			} else {
+				reqLogger.Info("Deleted ActiveMQArtemisAddress for " + instance.Spec.AddressName)
+			}
+		}
+	}
+
+	return err
 }

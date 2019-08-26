@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/kibiluzbad/activemq-artemis-operator/version"
 	"os"
 	"runtime"
 
+	"github.com/kibiluzbad/activemq-artemis-operator/version"
+
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/apis"
 	"github.com/kibiluzbad/activemq-artemis-operator/pkg/controller"
-	"github.com/kibiluzbad/activemq-artemis-operator/pkg/utils/env"
+	"github.com/kibiluzbad/activemq-artemis-operator/pkg/resources/environments"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
